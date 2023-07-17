@@ -9,8 +9,9 @@ var defaultParallelism = 12
 // specifies the default version of Terraform Core which should be used for testing
 var defaultTerraformCoreVersion = "1.2.5"
 
-// This represents a cron view of days of the week, Monday - Friday.
-const val defaultDaysOfWeek = "*"
+// This represents a cron view of days of the week: 0=Sun, 1=Mon, ..., 7=Sun
+//  Feature branch testing happens on Mondays
+const val defaultDaysOfWeek = "1"
 
 // Cron value for any day of month
 const val defaultDaysOfMonth = "*"
