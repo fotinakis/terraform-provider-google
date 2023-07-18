@@ -5,29 +5,30 @@ import jetbrains.buildServer.configs.kotlin.Project
 
 const val providerName = "google"
 
-fun Google(environment: String, branchRef: String, configuration : ClientConfiguration) : Project {
-    return Project{
-        vcsRoot(providerRepository)
+fun Google(environment: String, branchRef: String, gitVcsRoot GitVcsRoot, configuration : ClientConfiguration) : Project {
 
-        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branchRef, configuration)
+    return Project{
+        vcsRoot(gitVcsRoot)
+
+        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branchRef, gitVcsRoot, configuration)
         buildConfigs.forEach { buildConfiguration ->
             buildType(buildConfiguration)
         }
     }
 }
 
-fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, config : ClientConfiguration): List<BuildType> {
+fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, gitVcsRoot GitVcsRoot, config : ClientConfiguration): List<BuildType> {
     var list = ArrayList<BuildType>()
 
     packages.forEach { (packageName, displayName) ->
         if (packageName == "services") {
-            var serviceList = buildConfigurationsForPackages(services, providerName, path+"/"+packageName, environment, branchRef, config)
+            var serviceList = buildConfigurationsForPackages(services, providerName, path+"/"+packageName, environment, branchRef, gitVcsRoot, config)
             list.addAll(serviceList)
         } else {
             var testConfig = testConfiguration(environment)
 
             var pkg = packageDetails(packageName, displayName, environment, branchRef)
-            var buildConfig = pkg.buildConfiguration(providerName, path, true, testConfig.startHour, testConfig.parallelism, testConfig.daysOfWeek, testConfig.daysOfMonth)
+            var buildConfig = pkg.buildConfiguration(providerName, path, true, testConfig.startHour, testConfig.parallelism, testConfig.daysOfWeek, testConfig.daysOfMonth, gitVcsRoot)
 
             buildConfig.params.ConfigureGoogleSpecificTestParameters(config)
 

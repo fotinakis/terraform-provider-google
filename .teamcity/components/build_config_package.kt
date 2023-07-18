@@ -8,7 +8,7 @@ class packageDetails(name: String, displayName: String, environment: String, bra
     val environment = environment
     val branchRef = branchRef
 
-    fun buildConfiguration(providerName : String, path : String, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int, daysOfWeek: String, daysOfMonth: String) : BuildType {
+    fun buildConfiguration(providerName : String, path : String, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int, daysOfWeek: String, daysOfMonth: String, gitVcsRoot GitVcsRoot) : BuildType {
         return BuildType {
             // TC needs a consistent ID for dynamically generated packages
             id(uniqueID(providerName))
@@ -16,7 +16,7 @@ class packageDetails(name: String, displayName: String, environment: String, bra
             name = "%s - Acceptance Tests".format(displayName)
 
             vcs {
-                root(providerRepository)
+                root(gitVcsRoot)
                 cleanCheckout = true
             }
 

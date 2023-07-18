@@ -29,4 +29,4 @@ var branchRef = DslContext.getParameter("branch", "refs/heads/main")
 
 var clientConfig = ClientConfiguration(custId, org, org2, billingAccount, billingAccount2, masterBillingAccount, credentials, project, orgDomain, projectNumber, region, serviceAccount, zone, firestoreProject, identityUser)
 
-project(Google(environment, branchRef, clientConfig))
+project(Google(environment, branchRef, providerRepository, clientConfig))
