@@ -6,21 +6,19 @@ import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 
 const val providerName = "google"
 
-fun Google(environment: String, branchRef: String, gitVcsRoot: GitVcsRoot, configuration : ClientConfiguration) : Project {
-    
-    gitVcsRoot.branch = branchRef
-
+fun Google(environment: String, branchRef: String, configuration : ClientConfiguration) : Project {
+    val gitVcsRoot = getProviderRepository(branchRef)
     return Project{
         vcsRoot(gitVcsRoot)
 
-        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branchRef, gitVcsRoot, configuration)
+        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branchRef, root, configuration)
         buildConfigs.forEach { buildConfiguration ->
             buildType(buildConfiguration)
         }
     }
 }
 
-fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, gitVcsRoot: GitVcsRoot, config : ClientConfiguration): List<BuildType> {
+fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, gitVcsRoot GitVcsRoot, config : ClientConfiguration): List<BuildType> {
     var list = ArrayList<BuildType>()
 
     packages.forEach { (packageName, displayName) ->
