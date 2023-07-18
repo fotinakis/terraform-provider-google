@@ -2,10 +2,13 @@
 
 import jetbrains.buildServer.configs.kotlin.BuildType
 import jetbrains.buildServer.configs.kotlin.Project
+import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 
 const val providerName = "google"
 
 fun Google(environment: String, branchRef: String, gitVcsRoot GitVcsRoot, configuration : ClientConfiguration) : Project {
+    
+    gitVcsRoot.branch = branchRef
 
     return Project{
         vcsRoot(gitVcsRoot)
