@@ -24,7 +24,7 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
             var serviceList = buildConfigurationsForPackages(services, providerName, path+"/"+packageName, environment, config)
             list.addAll(serviceList)
         } else {
-            var testConfig = testConfiguration()
+            var testConfig = testConfiguration(environment)
 
             var pkg = packageDetails(packageName, displayName, environment)
             var buildConfig = pkg.buildConfiguration(providerName, path, true, testConfig.startHour, testConfig.parallelism, testConfig.daysOfWeek, testConfig.daysOfMonth)
