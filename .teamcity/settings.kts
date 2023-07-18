@@ -19,10 +19,14 @@ var region = DslContext.getParameter("region", "")
 var serviceAccount = DslContext.getParameter("serviceAccount", "")
 var zone = DslContext.getParameter("zone", "")
 var credentials = DslContext.getParameter("credentials", "")
-var environment = DslContext.getParameter("environment", "public")
 var firestoreProject = DslContext.getParameter("firestoreProject", "")
 var identityUser = DslContext.getParameter("identityUser", "")
 
+// Values of these parameters manually set in TeamCity change how
+// the configuration code behaves
+var environment = DslContext.getParameter("environment", "public")
+var branch = DslContext.getParameter("branch", "refs/heads/main")
+
 var clientConfig = ClientConfiguration(custId, org, org2, billingAccount, billingAccount2, masterBillingAccount, credentials, project, orgDomain, projectNumber, region, serviceAccount, zone, firestoreProject, identityUser)
 
-project(Google(environment, clientConfig))
+project(Google(environment, branch, clientConfig))

@@ -5,8 +5,9 @@ import jetbrains.buildServer.configs.kotlin.Project
 
 const val providerName = "google"
 
-fun Google(environment: String, configuration : ClientConfiguration) : Project {
+fun Google(environment: String, branch: String, configuration : ClientConfiguration) : Project {
     return Project{
+        var providerRepository = getProviderRepository(branch)
         vcsRoot(providerRepository)
 
         var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, configuration)
@@ -26,7 +27,7 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
         } else {
             var testConfig = testConfiguration(environment)
 
-            var pkg = packageDetails(packageName, displayName, environment)
+            var pkg = packageDetails(packageName, displayName, environment, branch)
             var buildConfig = pkg.buildConfiguration(providerName, path, true, testConfig.startHour, testConfig.parallelism, testConfig.daysOfWeek, testConfig.daysOfMonth)
 
             buildConfig.params.ConfigureGoogleSpecificTestParameters(config)
