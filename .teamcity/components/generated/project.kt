@@ -10,19 +10,19 @@ fun Google(environment: String, branch: String, configuration : ClientConfigurat
         var providerRepository = getProviderRepository(branch)
         vcsRoot(providerRepository)
 
-        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, configuration)
+        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branch, configuration)
         buildConfigs.forEach { buildConfiguration ->
             buildType(buildConfiguration)
         }
     }
 }
 
-fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, config : ClientConfiguration): List<BuildType> {
+fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branch: String, config : ClientConfiguration): List<BuildType> {
     var list = ArrayList<BuildType>()
 
     packages.forEach { (packageName, displayName) ->
         if (packageName == "services") {
-            var serviceList = buildConfigurationsForPackages(services, providerName, path+"/"+packageName, environment, config)
+            var serviceList = buildConfigurationsForPackages(services, providerName, path+"/"+packageName, environment, branch, config)
             list.addAll(serviceList)
         } else {
             var testConfig = testConfiguration(environment)
