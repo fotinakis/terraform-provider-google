@@ -6,7 +6,7 @@ import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 
 const val providerName = "google"
 
-fun Google(environment: String, branchRef: String, gitVcsRoot GitVcsRoot, configuration : ClientConfiguration) : Project {
+fun Google(environment: String, branchRef: String, gitVcsRoot: GitVcsRoot, configuration : ClientConfiguration) : Project {
     
     gitVcsRoot.branch = branchRef
 
@@ -20,7 +20,7 @@ fun Google(environment: String, branchRef: String, gitVcsRoot GitVcsRoot, config
     }
 }
 
-fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, gitVcsRoot GitVcsRoot, config : ClientConfiguration): List<BuildType> {
+fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, gitVcsRoot: GitVcsRoot, config : ClientConfiguration): List<BuildType> {
     var list = ArrayList<BuildType>()
 
     packages.forEach { (packageName, displayName) ->
