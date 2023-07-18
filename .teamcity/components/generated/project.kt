@@ -48,8 +48,8 @@ class testConfiguration(environment: String, parallelism: Int = defaultParalleli
 
 
     init {
-        // environment parameter set to "major-release-5.0.0" changes the day of week
-        if (environment == "major-release-5.0.0") {
+        // environment parameter set to "majorRelease5.0.0" changes the day of week
+        if (environment == "majorRelease5.0.0") {
             var parallelism = parallelism
             var startHour = startHour
             var daysOfWeek = "4" // Thursday for GA
