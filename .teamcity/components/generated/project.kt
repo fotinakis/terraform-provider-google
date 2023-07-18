@@ -46,14 +46,13 @@ class testConfiguration(environment: String, parallelism: Int = defaultParalleli
     var daysOfWeek = daysOfWeek
     var daysOfMonth = daysOfMonth
 
-
     init {
         // environment parameter set to "majorRelease5.0.0" changes the day of week
         if (environment == "majorRelease500") {
-            var parallelism = parallelism
-            var startHour = startHour
-            var daysOfWeek = "4" // Thursday for GA
-            var daysOfMonth = daysOfMonth
+            this.parallelism = parallelism
+            this.startHour = startHour
+            this.daysOfWeek = "4" // Thursday for GA
+            this.daysOfMonth = daysOfMonth
         }
     }
 
