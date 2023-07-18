@@ -2,12 +2,11 @@
 
 import jetbrains.buildServer.configs.kotlin.*
 
-class packageDetails(name: String, displayName: String, environment: String, branch: String) {
+class packageDetails(name: String, displayName: String, environment: String, branchRef: String) {
     val packageName = name
     val displayName = displayName
     val environment = environment
-    val branch = branch
-    val providerRepository = getProviderRepository(branch)
+    val branchRef = branchRef
 
     fun buildConfiguration(providerName : String, path : String, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int, daysOfWeek: String, daysOfMonth: String) : BuildType {
         return BuildType {
@@ -51,7 +50,7 @@ class packageDetails(name: String, displayName: String, environment: String, bra
             }
 
             triggers {
-                RunNightly(nightlyTestsEnabled, startHour, daysOfWeek, daysOfMonth, branch)
+                RunNightly(nightlyTestsEnabled, startHour, daysOfWeek, daysOfMonth, branchRef)
             }
         }
     }
