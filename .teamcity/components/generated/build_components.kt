@@ -121,10 +121,10 @@ fun ParametrizedWithType.hiddenPasswordVariable(name: String, value: String, des
 }
 
 fun Triggers.RunNightly(nightlyTestsEnabled: Boolean, startHour: Int, daysOfWeek: String, daysOfMonth: String, branch: String) {
-    val branchFilter = "+:" + branch // e.g. "+:refs/heads/main"
+    val filter = "+:" + branch // e.g. "+:refs/heads/main"
     schedule{
         enabled = nightlyTestsEnabled
-        branchFilter = branchFilter
+        branchFilter = filter
 
         schedulingPolicy = cron {
             hours = startHour.toString()
