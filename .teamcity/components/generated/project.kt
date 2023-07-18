@@ -40,20 +40,21 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
 
 class testConfiguration(environment: String, parallelism: Int = defaultParallelism, startHour: Int = defaultStartHour, daysOfWeek: String = defaultDaysOfWeek, daysOfMonth: String = defaultDaysOfMonth) {
 
-    // If the TeamCity project has an environment parameter set to "default",
-    // or no environment parameter, use these default values
-    if (environment == "default") {
-        var parallelism = parallelism
-        var startHour = startHour
-        var daysOfWeek = daysOfWeek
-        var daysOfMonth = daysOfMonth
+    // Default values are present if init doesn't change them
+    var parallelism = parallelism
+    var startHour = startHour
+    var daysOfWeek = daysOfWeek
+    var daysOfMonth = daysOfMonth
+
+
+    init {
+        // environment parameter set to "major-release-5.0.0" changes the day of week
+        if (environment == "major-release-5.0.0") {
+            var parallelism = parallelism
+            var startHour = startHour
+            var daysOfWeek = "4" // Thursday for GA
+            var daysOfMonth = daysOfMonth
+        }
     }
 
-    // environment parameter set to "major-release-5.0.0" changes the day of week
-    if (environment == "major-release-5.0.0") {
-        var parallelism = parallelism
-        var startHour = startHour
-        var daysOfWeek = "4" // Thursday for GA
-        var daysOfMonth = daysOfMonth
-    }
 }
