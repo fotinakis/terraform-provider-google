@@ -5,7 +5,7 @@ import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 fun getProviderRepository(branchRef: String) : GitVcsRoot {
 
     return GitVcsRoot({
-        id = "terraform-provider-google"
+        id = id("terraform-provider-google")
         name = "terraform-provider-google"
         url = "https://github.com/hashicorp/terraform-provider-google.git"
         agentCleanPolicy = AgentCleanPolicy.ON_BRANCH_CHANGE
