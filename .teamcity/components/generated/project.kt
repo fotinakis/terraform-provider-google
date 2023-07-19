@@ -11,7 +11,7 @@ fun Google(environment: String, branchRef: String, configuration: ClientConfigur
     return Project{
         vcsRoot(gitVcsRoot)
 
-        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branchRef, root, configuration)
+        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branchRef, gitVcsRoot, configuration)
         buildConfigs.forEach { buildConfiguration ->
             buildType(buildConfiguration)
         }
