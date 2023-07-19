@@ -4,16 +4,12 @@ import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot.AgentCleanPolicy.ON_BRANCH_CHANGE
 import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot.AgentCleanFilesPolicy.ALL_UNTRACKED
 
-fun getProviderRepository(branchRef: String) : GitVcsRoot {
-
-    return GitVcsRoot({
-        id = id("terraform-provider-google")
-        name = "terraform-provider-google"
-        url = "https://github.com/hashicorp/terraform-provider-google.git"
-        agentCleanPolicy = ON_BRANCH_CHANGE
-        agentCleanFilesPolicy = ALL_UNTRACKED
-        branchSpec = "+:*"
-        branch = branchRef
-        authMethod = anonymous()
-    })
-}
+object ProviderRepository : GitVcsRoot({
+    name = "terraform-provider-google"
+    url = "https://github.com/hashicorp/terraform-provider-google.git"
+    agentCleanPolicy = AgentCleanPolicy.ON_BRANCH_CHANGE
+    agentCleanFilesPolicy = AgentCleanFilesPolicy.ALL_UNTRACKED
+    branchSpec = "+:*"
+    branch = "refs/heads/main"
+    authMethod = anonymous()
+})
