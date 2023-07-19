@@ -18,7 +18,7 @@ fun Google(environment: String, branchRef: String, configuration : ClientConfigu
     }
 }
 
-fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, gitVcsRoot GitVcsRoot, config : ClientConfiguration): List<BuildType> {
+fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, gitVcsRoot: GitVcsRoot, config : ClientConfiguration): List<BuildType> {
     var list = ArrayList<BuildType>()
 
     packages.forEach { (packageName, displayName) ->

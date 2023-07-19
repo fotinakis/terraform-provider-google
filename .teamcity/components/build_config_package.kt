@@ -1,6 +1,7 @@
 // this file is copied from mmv1, any changes made here will be overwritten
 
 import jetbrains.buildServer.configs.kotlin.*
+import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 
 class packageDetails(name: String, displayName: String, environment: String, branchRef: String) {
     val packageName = name
@@ -8,7 +9,7 @@ class packageDetails(name: String, displayName: String, environment: String, bra
     val environment = environment
     val branchRef = branchRef
 
-    fun buildConfiguration(providerName : String, path : String, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int, daysOfWeek: String, daysOfMonth: String, gitVcsRoot GitVcsRoot) : BuildType {
+    fun buildConfiguration(providerName : String, path : String, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int, daysOfWeek: String, daysOfMonth: String, gitVcsRoot: GitVcsRoot) : BuildType {
         return BuildType {
             // TC needs a consistent ID for dynamically generated packages
             id(uniqueID(providerName))
