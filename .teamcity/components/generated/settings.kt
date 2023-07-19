@@ -14,3 +14,7 @@ const val defaultDaysOfWeek = "1-3,5-7" // All nights except Thursday for GA; fe
 
 // Cron value for any day of month
 const val defaultDaysOfMonth = "*"
+
+// Values that `environment` parameter is checked against,
+// when deciding to change how TeamCity objects are configured
+const val MAJOR_RELEASE_TESTING = "majorRelease500"

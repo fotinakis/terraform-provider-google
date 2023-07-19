@@ -50,8 +50,9 @@ class testConfiguration(environment: String, parallelism: Int = defaultParalleli
     var daysOfMonth = daysOfMonth
 
     init {
-        // environment parameter set to "majorRelease5.0.0" changes the day of week
-        if (environment == "majorRelease500") {
+        // If the environment parameter is set to the value of MAJOR_RELEASE_TESTING, 
+        // change the days of week to the day for v5.0.0 feature branch testing
+        if (environment == MAJOR_RELEASE_TESTING) {
             this.parallelism = parallelism
             this.startHour = startHour
             this.daysOfWeek = "4" // Thursday for GA
