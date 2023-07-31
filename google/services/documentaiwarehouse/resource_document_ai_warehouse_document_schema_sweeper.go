@@ -15,7 +15,7 @@
 //
 // ----------------------------------------------------------------------------
 
-package alloydb
+package documentaiwarehouse
 
 import (
 	"context"
@@ -30,12 +30,12 @@ import (
 )
 
 func init() {
-	sweeper.AddTestSweepers("AlloydbInstance", testSweepAlloydbInstance)
+	sweeper.AddTestSweepers("DocumentAIWarehouseDocumentSchema", testSweepDocumentAIWarehouseDocumentSchema)
 }
 
 // At the time of writing, the CI only passes us-central1 as the region
-func testSweepAlloydbInstance(region string) error {
-	resourceName := "AlloydbInstance"
+func testSweepDocumentAIWarehouseDocumentSchema(region string) error {
+	resourceName := "DocumentAIWarehouseDocumentSchema"
 	log.Printf("[INFO][SWEEPER_LOG] Starting sweeper for %s", resourceName)
 
 	config, err := sweeper.SharedConfigForRegion(region)
@@ -64,7 +64,7 @@ func testSweepAlloydbInstance(region string) error {
 		},
 	}
 
-	listTemplate := strings.Split("https://alloydb.googleapis.com/v1/{{cluster}}/instances?instanceId={{instance_id}}", "?")[0]
+	listTemplate := strings.Split("https://contentwarehouse.googleapis.com/v1/projects/{{project_number}}/locations/{{location}}/documentSchemas", "?")[0]
 	listUrl, err := tpgresource.ReplaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -83,7 +83,7 @@ func testSweepAlloydbInstance(region string) error {
 		return nil
 	}
 
-	resourceList, ok := res["instances"]
+	resourceList, ok := res["documentSchemas"]
 	if !ok {
 		log.Printf("[INFO][SWEEPER_LOG] Nothing found in response.")
 		return nil
@@ -96,23 +96,19 @@ func testSweepAlloydbInstance(region string) error {
 	nonPrefixCount := 0
 	for _, ri := range rl {
 		obj := ri.(map[string]interface{})
-		var name string
-		// Id detected in the delete URL, attempt to use id.
-		if obj["id"] != nil {
-			name = tpgresource.GetResourceNameFromSelfLink(obj["id"].(string))
-		} else if obj["name"] != nil {
-			name = tpgresource.GetResourceNameFromSelfLink(obj["name"].(string))
-		} else {
-			log.Printf("[INFO][SWEEPER_LOG] %s resource name and id were nil", resourceName)
+		if obj["name"] == nil {
+			log.Printf("[INFO][SWEEPER_LOG] %s resource name was nil", resourceName)
 			return nil
 		}
+
+		name := tpgresource.GetResourceNameFromSelfLink(obj["name"].(string))
 		// Skip resources that shouldn't be sweeped
 		if !sweeper.IsSweepableTestResource(name) {
 			nonPrefixCount++
 			continue
 		}
 
-		deleteTemplate := "https://alloydb.googleapis.com/v1/{{cluster}}/instances/{{instance_id}}"
+		deleteTemplate := "https://contentwarehouse.googleapis.com/v1/{{name}}"
 		deleteUrl, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)

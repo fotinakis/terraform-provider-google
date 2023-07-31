@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 // this file is auto-generated with mmv1, any changes made here will be overwritten
 
 // specifies the default hour (UTC) at which tests should be triggered, if enabled
@@ -17,4 +22,4 @@ const val defaultDaysOfMonth = "*"
 
 // Values that `environment` parameter is checked against,
 // when deciding to change how TeamCity objects are configured
-const val MAJOR_RELEASE_TESTING = "majorRelease500"
+const val MAJOR_RELEASE_TESTING = "major-release-5.0.0-testing"

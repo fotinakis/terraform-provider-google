@@ -1,36 +1,44 @@
+/*
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 // this file is auto-generated with mmv1, any changes made here will be overwritten
 
 import jetbrains.buildServer.configs.kotlin.BuildType
 import jetbrains.buildServer.configs.kotlin.Project
-import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
+import jetbrains.buildServer.configs.kotlin.AbsoluteId
 
 const val providerName = "google"
 
-fun Google(environment: String, branchRef: String, configuration: ClientConfiguration) : Project {
-    ProviderRepository.param("branch", branchRef)
-    println(ProviderRepository.branch)
+// Google returns an instance of Project,
+// which has multiple build configurations defined within it.
+// See https://teamcity.jetbrains.com/app/dsl-documentation/root/project/index.html
+fun Google(environment: String, manualVcsRoot: AbsoluteId, branchRef: String, configuration: ClientConfiguration) : Project {
     return Project{
-        vcsRoot(ProviderRepository)
 
-        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, branchRef, configuration)
+        // Create build configs for each package defined in packages.kt
+        var buildConfigs = buildConfigurationsForPackages(packages, providerName, "google", environment, manualVcsRoot, branchRef, configuration)
         buildConfigs.forEach { buildConfiguration ->
             buildType(buildConfiguration)
         }
     }
 }
 
-fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, branchRef: String, config : ClientConfiguration): List<BuildType> {
+fun buildConfigurationsForPackages(packages: Map<String, String>, providerName : String, path : String, environment: String, manualVcsRoot: AbsoluteId, branchRef: String, config: ClientConfiguration): List<BuildType> {
     var list = ArrayList<BuildType>()
 
     packages.forEach { (packageName, displayName) ->
         if (packageName == "services") {
-            var serviceList = buildConfigurationsForPackages(services, providerName, "$path/$packageName", environment, branchRef, config)
+            // `services` is a folder containing packages, not a package itself; call buildConfigurationsForPackages to iterate through directories found within `services`
+            var serviceList = buildConfigurationsForPackages(services, providerName, path+"/"+packageName, environment, manualVcsRoot, branchRef, config)
             list.addAll(serviceList)
         } else {
+            // other folders assumed to be packages
             var testConfig = testConfiguration(environment)
 
             var pkg = packageDetails(packageName, displayName, environment, branchRef)
-            var buildConfig = pkg.buildConfiguration(providerName, path, true, testConfig.startHour, testConfig.parallelism, testConfig.daysOfWeek, testConfig.daysOfMonth)
+            var buildConfig = pkg.buildConfiguration(providerName, path, manualVcsRoot, true, testConfig.startHour, testConfig.parallelism, testConfig.daysOfWeek, testConfig.daysOfMonth)
 
             buildConfig.params.ConfigureGoogleSpecificTestParameters(config)
 

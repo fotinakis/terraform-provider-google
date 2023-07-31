@@ -1,7 +1,12 @@
+/*
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 // this file is copied from mmv1, any changes made here will be overwritten
 
 import jetbrains.buildServer.configs.kotlin.*
-import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
+import jetbrains.buildServer.configs.kotlin.AbsoluteId
 
 class packageDetails(name: String, displayName: String, environment: String, branchRef: String) {
     val packageName = name
@@ -9,7 +14,9 @@ class packageDetails(name: String, displayName: String, environment: String, bra
     val environment = environment
     val branchRef = branchRef
 
-    fun buildConfiguration(providerName : String, path : String, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int, daysOfWeek: String, daysOfMonth: String) : BuildType {
+    // buildConfiguration returns a BuildType for a service package
+    // For BuildType docs, see https://teamcity.jetbrains.com/app/dsl-documentation/root/build-type/index.html
+    fun buildConfiguration(providerName : String, path : String, manualVcsRoot: AbsoluteId, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int, daysOfWeek: String, daysOfMonth: String) : BuildType {
         return BuildType {
             // TC needs a consistent ID for dynamically generated packages
             id(uniqueID(providerName))
@@ -17,7 +24,7 @@ class packageDetails(name: String, displayName: String, environment: String, bra
             name = "%s - Acceptance Tests".format(displayName)
 
             vcs {
-                root(ProviderRepository)
+                root(rootId = manualVcsRoot)
                 cleanCheckout = true
             }
 
@@ -57,6 +64,12 @@ class packageDetails(name: String, displayName: String, environment: String, bra
     }
 
     fun uniqueID(provider : String) : String {
-        return "%s_SERVICE_%s_%s".format(provider.replace("-", "").toUpperCase(), environment.toUpperCase(), packageName.toUpperCase())
+        // Replacing chars can be necessary, due to limitations on IDs
+        // "ID should start with a latin letter and contain only latin letters, digits and underscores (at most 225 characters)." 
+        var pv = provider.replace("-", "").toUpperCase()
+        var env = environment.toUpperCase().replace("-", "").replace(".", "").toUpperCase()
+        var pkg = packageName.toUpperCase()
+
+        return "%s_SERVICE_%s_%s".format(pv, env, pkg)
     }
 }
