@@ -31,7 +31,6 @@ class packageDetails(name: String, displayName: String, environment: String, bra
             steps {
                 ConfigureGoEnv()
                 DownloadTerraformBinary()
-                DetermineWorkingDirectory(path, packageName)
                 RunSweepers("Pre-Sweeper")
                 RunAcceptanceTests()
                 RunSweepers("Post-Sweeper")

@@ -56,17 +56,6 @@ fun servicePath(path : String, packageName: String) : String {
     return "./%s/%s".format(path, packageName)
 }
 
-fun BuildSteps.DetermineWorkingDirectory(path : String, packageName: String) {
-    var packagePath = servicePath(path, packageName)
-    var withTestsDirectoryPath = "##teamcity[setParameter name='PACKAGE_PATH' value='%s/tests']".format(packagePath)
-
-    // some packages use a ./tests folder, others don't - conditionally append that if needed
-    step(ScriptBuildStep {
-        name          = "Determine Working Directory for this Package"
-        scriptContent = "if [ -d \"%s/tests\" ]; then echo \"%s\"; fi".format(packagePath, withTestsDirectoryPath)
-    })
-}
-
 fun BuildSteps.RunSweepers(sweeperStepName : String) {
     step(ScriptBuildStep{
         name = sweeperStepName
