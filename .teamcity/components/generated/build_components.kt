@@ -56,7 +56,7 @@ fun servicePath(path : String, packageName: String) : String {
     return "./%s/%s".format(path, packageName)
 }
 
-fun BuildSteps.RunAcceptanceTests(path : String, packageName: String) {
+fun BuildSteps.DetermineWorkingDirectory(path : String, packageName: String) {
     var packagePath = servicePath(path, packageName)
     var withTestsDirectoryPath = "##teamcity[setParameter name='PACKAGE_PATH' value='%s/tests']".format(packagePath)
 
@@ -65,18 +65,24 @@ fun BuildSteps.RunAcceptanceTests(path : String, packageName: String) {
         name          = "Determine Working Directory for this Package"
         scriptContent = "if [ -d \"%s/tests\" ]; then echo \"%s\"; fi".format(packagePath, withTestsDirectoryPath)
     })
+}
 
+fun BuildSteps.RunSweepers(sweeperStepName : String) {
     step(ScriptBuildStep{
-        name = "Pre-Sweeper"
+        name = sweeperStepName
         scriptContent = "go test -v \"%PACKAGE_PATH%\" -sweep=\"%SWEEPER_REGIONS%\"  -sweep-allow-failures -sweep-run=\"%SWEEP_RUN%\" -timeout 30m"
     })
+}
 
+fun BuildSteps.RunAcceptanceTests() {
     if (useTeamCityGoTest) {
+        // Using native Go test runner in TeamCity, which stops remaining tests after a failure
         step(ScriptBuildStep {
             name = "Run Tests"
             scriptContent = "go test -v \"%PACKAGE_PATH%\" -timeout=\"%TIMEOUT%h\" -test.parallel=\"%PARALLELISM%\" -run=\"%TEST_PREFIX%\" -json"
         })
     } else {
+        // Using jen20/teamcity-go-test, which allows tests to continue after a failure
         step(ScriptBuildStep {
             name = "Compile Test Binary"
             scriptContent = "go test -c -o test-binary"
@@ -84,17 +90,11 @@ fun BuildSteps.RunAcceptanceTests(path : String, packageName: String) {
         })
 
         step(ScriptBuildStep {
-            // ./test-binary -test.list=TestAccComputeRegionDisk_ | teamcity-go-test -test ./test-binary -timeout 1s
             name = "Run via jen20/teamcity-go-test"
             scriptContent = "./test-binary -test.list=\"%TEST_PREFIX%\" | teamcity-go-test -test ./test-binary -parallelism \"%PARALLELISM%\" -timeout \"%TIMEOUT%h\""
             workingDir = "%PACKAGE_PATH%"
         })
     }
-
-    step(ScriptBuildStep{
-        name = "Post-Sweeper"
-        scriptContent = "go test -v \"%PACKAGE_PATH%\" -sweep=\"%SWEEPER_REGIONS%\"  -sweep-allow-failures -sweep-run=\"%SWEEP_RUN%\" -timeout 30m"
-    })
 }
 
 fun ParametrizedWithType.TerraformAcceptanceTestParameters(parallelism : Int, prefix : String, timeout: String, sweeperRegions: String, sweepRun: String) {
