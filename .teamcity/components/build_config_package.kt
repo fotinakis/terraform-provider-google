@@ -8,10 +8,10 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.AbsoluteId
 
-class packageDetails(providerName: String, packageName: String, packageDisplayName: String, environment: String) {
-    val providerName = providerName
+class packageDetails(packageName: String, displayName: String, providerName: String, environment: String) {
     val packageName = packageName
-    val packageDisplayName = packageDisplayName
+    val displayName = displayName
+    val providerName = providerName
     val environment = environment
 
     // buildConfiguration returns a BuildType for a service package
@@ -21,7 +21,7 @@ class packageDetails(providerName: String, packageName: String, packageDisplayNa
             // TC needs a consistent ID for dynamically generated packages
             id(uniqueID(providerName))
 
-            name = "%s - Acceptance Tests".format(packageDisplayName)
+            name = "%s - Acceptance Tests".format(displayName)
 
             vcs {
                 root(rootId = manualVcsRoot)
@@ -31,9 +31,7 @@ class packageDetails(providerName: String, packageName: String, packageDisplayNa
             steps {
                 ConfigureGoEnv()
                 DownloadTerraformBinary()
-                RunSweepers("Pre-Sweeper")
                 RunAcceptanceTests()
-                RunSweepers("Post-Sweeper")
             }
 
             failureConditions {
@@ -45,7 +43,7 @@ class packageDetails(providerName: String, packageName: String, packageDisplayNa
             }
 
             params {
-                TerraformAcceptanceTestParameters(parallelism, "TestAcc", "12", "us-central1", "")
+                TerraformAcceptanceTestParameters(parallelism, "TestAcc", "12", "", "")
                 TerraformAcceptanceTestsFlag()
                 TerraformCoreBinaryTesting()
                 TerraformShouldPanicForSchemaErrors()
@@ -59,7 +57,7 @@ class packageDetails(providerName: String, packageName: String, packageDisplayNa
         }
     }
 
-    fun uniqueID(provider : String) : String {
+    fun uniqueID(provider: String) : String {
         // Replacing chars can be necessary, due to limitations on IDs
         // "ID should start with a latin letter and contain only latin letters, digits and underscores (at most 225 characters)." 
         var pv = provider.replace("-", "").toUpperCase()

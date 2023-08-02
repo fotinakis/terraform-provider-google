@@ -56,22 +56,24 @@ fun servicePath(path : String, packageName: String) : String {
     return "./%s/%s".format(path, packageName)
 }
 
+// RunSweepers runs sweepers, and relies on set build configuration parameters
 fun BuildSteps.RunSweepers(sweeperStepName : String) {
     step(ScriptBuildStep{
         name = sweeperStepName
-        scriptContent = "go test -v \"%PACKAGE_PATH%\" -sweep=\"%SWEEPER_REGIONS%\"  -sweep-allow-failures -sweep-run=\"%SWEEP_RUN%\" -timeout 30m"
+        scriptContent = "go test -v \"%PACKAGE_PATH%\" -sweep=\"%SWEEPER_REGIONS%\" -sweep-allow-failures -sweep-run=\"%SWEEP_RUN%\" -timeout 30m"
     })
 }
 
+// RunAcceptanceTests runs tests for a given directory, using either:
+// - TeamCity's test runner - stops remaining tests after a failure
+// - jen20/teamcity-go-test - allows tests to continue after a failure, and requires a test binary
 fun BuildSteps.RunAcceptanceTests() {
     if (useTeamCityGoTest) {
-        // Using native Go test runner in TeamCity, which stops remaining tests after a failure
         step(ScriptBuildStep {
             name = "Run Tests"
             scriptContent = "go test -v \"%PACKAGE_PATH%\" -timeout=\"%TIMEOUT%h\" -test.parallel=\"%PARALLELISM%\" -run=\"%TEST_PREFIX%\" -json"
         })
     } else {
-        // Using jen20/teamcity-go-test, which allows tests to continue after a failure
         step(ScriptBuildStep {
             name = "Compile Test Binary"
             scriptContent = "go test -c -o test-binary"
@@ -125,6 +127,7 @@ fun ParametrizedWithType.hiddenPasswordVariable(name: String, value: String, des
 
 fun Triggers.RunNightly(config: NightlyTriggerConfiguration) {
     val filter = "+:" + config.branchRef // e.g. "+:refs/heads/main"
+
     schedule{
         enabled = config.nightlyTestsEnabled
         branchFilter = filter
