@@ -33,8 +33,8 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
             // `services` is a folder containing packages, not a package itself; call buildConfigurationsForPackages to iterate through directories found within `services`
             var serviceList = buildConfigurationsForPackages(services, providerName, path+"/"+packageName, environment, manualVcsRoot, branchRef, config)
             list.addAll(serviceList)
-        } else if (packageName == "sweepers") {
-            // `sweepers` is a folder containing sweeper tests
+        } else if (packageName == "sweeper") {
+            // `sweepers` is the folder containing `resource.TestMain`, which allows sweeper tests to be invoked
             var triggerConfig = NightlyTriggerConfiguration(environment, branchRef)
             
             var s = sweeperBuildConfigs(packageName, providerName, environment, branchRef, config)
