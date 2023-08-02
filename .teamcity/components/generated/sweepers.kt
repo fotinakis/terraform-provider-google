@@ -63,7 +63,7 @@ class sweeperBuildConfigs(packageName: String, providerName: String, environment
             steps {
                 ConfigureGoEnv()
                 DownloadTerraformBinary()
-                RunSweepers(sweeperStepName)
+                // RunSweepers(sweeperStepName)
             }
 
             failureConditions {
