@@ -43,6 +43,13 @@ fun BuildSteps.ConfigureGoEnv() {
     })
 }
 
+fun BuildSteps.SetGitCommitBuildId() {
+    step(ScriptBuildStep {
+        name = "Set build id as shortened git commit hash"
+        scriptContent = "GIT_HASH=%system.build.vcs.number% && GIT_HASH_SHORT=${GIT_HASH:0:7} && echo \"##teamcity[buildNumber '${GIT_HASH_SHORT}']\""
+    })
+}
+
 fun BuildSteps.DownloadTerraformBinary() {
     // https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
     var terraformUrl = "https://releases.hashicorp.com/terraform/%env.TERRAFORM_CORE_VERSION%/terraform_%env.TERRAFORM_CORE_VERSION%_linux_amd64.zip"

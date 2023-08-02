@@ -61,6 +61,7 @@ class sweeperBuildConfigs(packageName: String, providerName: String, environment
             }
 
             steps {
+                SetGitCommitBuildId()
                 ConfigureGoEnv()
                 DownloadTerraformBinary()
                 // RunSweepers(sweeperStepName)
