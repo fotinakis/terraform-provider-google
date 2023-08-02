@@ -38,7 +38,7 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
             var triggerConfig = NightlyTriggerConfiguration(environment, branchRef)
 
             var pkg = packageDetails(providerName, packageName, displayName, environment)
-            var buildConfig = pkg.buildConfiguration(providerName, path, manualVcsRoot, defaultParallelism, triggerConfig)
+            var buildConfig = pkg.buildConfiguration(path, manualVcsRoot, defaultParallelism, triggerConfig)
 
             buildConfig.params.ConfigureGoogleSpecificTestParameters(config)
 
