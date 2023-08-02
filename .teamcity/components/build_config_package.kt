@@ -58,6 +58,8 @@ class packageDetails(packageName: String, displayName: String, providerName: Str
             dependencies {
                 snapshot(RelativeId(preSweeperBuildConfigId)) {
                     reuseBuilds = ReuseBuilds.ANY
+                    onDependencyFailure = FailureAction.IGNORE
+                    onDependencyCancel = FailureAction.ADD_PROBLEM
                 }
             }
         }
