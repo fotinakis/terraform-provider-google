@@ -1,10 +1,10 @@
-package apikeys
+package provider
 
 import (
 	"testing"
 )
 
-func TestAccSarahApikeysKey_FooBar(t *testing.T) {
+func TestAccSarahProvider_FooBar(t *testing.T) {
 	if true != true {
 		t.Fatalf("We've got big problems if true =/= true")
 	}
