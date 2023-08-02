@@ -35,10 +35,10 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
             list.addAll(serviceList)
         } else {
             // other folders assumed to be packages
-            var testConfig = testConfiguration(environment)
+            var triggerConfig = NightlyTriggerConfiguration(environment, branchRef)
 
-            var pkg = packageDetails(packageName, displayName, environment, branchRef)
-            var buildConfig = pkg.buildConfiguration(providerName, path, manualVcsRoot, true, testConfig.startHour, testConfig.parallelism, testConfig.daysOfWeek, testConfig.daysOfMonth)
+            var pkg = packageDetails(providerName, packageName, displayName, environment)
+            var buildConfig = pkg.buildConfiguration(providerName, path, manualVcsRoot, defaultParallelism, triggerConfig)
 
             buildConfig.params.ConfigureGoogleSpecificTestParameters(config)
 
@@ -49,10 +49,12 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
     return list
 }
 
-class testConfiguration(environment: String, parallelism: Int = defaultParallelism, startHour: Int = defaultStartHour, daysOfWeek: String = defaultDaysOfWeek, daysOfMonth: String = defaultDaysOfMonth) {
+class NightlyTriggerConfiguration(environment: String, branchRef: String, startHour: Int = defaultStartHour, daysOfWeek: String = defaultDaysOfWeek, daysOfMonth: String = defaultDaysOfMonth) {
 
-    // Default values are present if init doesn't change them
-    var parallelism = parallelism
+    var branchRef = branchRef
+    var nightlyTestsEnabled = true
+
+    // Default values are present if alternatives not passed in and not changed by logic in `init`
     var startHour = startHour
     var daysOfWeek = daysOfWeek
     var daysOfMonth = daysOfMonth
@@ -61,7 +63,6 @@ class testConfiguration(environment: String, parallelism: Int = defaultParalleli
         // If the environment parameter is set to the value of MAJOR_RELEASE_TESTING, 
         // change the days of week to the day for v5.0.0 feature branch testing
         if (environment == MAJOR_RELEASE_TESTING) {
-            this.parallelism = parallelism
             this.startHour = startHour
             this.daysOfWeek = "4" // Thursday for GA
             this.daysOfMonth = daysOfMonth
