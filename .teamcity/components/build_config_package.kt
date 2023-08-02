@@ -54,6 +54,12 @@ class packageDetails(packageName: String, displayName: String, providerName: Str
             triggers {
                 RunNightly(triggerConfig)
             }
+
+            dependencies {
+                snapshot(AbsoluteId(preSweeperBuildConfigId)) {
+                    reuseBuilds = ReuseBuilds.ANY
+                }
+            }
         }
     }
 
