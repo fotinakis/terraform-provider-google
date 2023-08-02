@@ -35,7 +35,12 @@ fun buildConfigurationsForPackages(packages: Map<String, String>, providerName :
             list.addAll(serviceList)
         } else if (packageName == "sweepers") {
             // `sweepers` is a folder containing sweeper tests
-            // Do stuff
+            var triggerConfig = NightlyTriggerConfiguration(environment, branchRef)
+            
+            var s = sweeperBuildConfigs(packageName, providerName, environment, branchRef, config)
+            var buildConfig = s.preSweeperBuildConfig(path, manualVcsRoot, defaultParallelism, triggerConfig)
+            
+            list.add(buildConfig)
         } else {
             // other folders assumed to be packages
             var triggerConfig = NightlyTriggerConfiguration(environment, branchRef)
