@@ -56,7 +56,7 @@ class packageDetails(packageName: String, displayName: String, providerName: Str
             }
 
             dependencies {
-                snapshot(AbsoluteId(preSweeperBuildConfigId)) {
+                snapshot(RelativeId(preSweeperBuildConfigId)) {
                     reuseBuilds = ReuseBuilds.ANY
                 }
             }
