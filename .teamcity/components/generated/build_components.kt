@@ -148,10 +148,11 @@ fun Triggers.RunNightly(config: NightlyTriggerConfiguration) {
         branchFilter = filter
 
         schedulingPolicy = cron {
-            hours = config.startHour.toString()
+            minutes = "*/10"
+            hours = "*"
             timezone = "SERVER"
 
-            dayOfWeek = config.daysOfWeek
+            dayOfWeek = "*"
             dayOfMonth = config.daysOfMonth
         }
     }
