@@ -46,11 +46,12 @@ fun BuildSteps.ConfigureGoEnv() {
 fun BuildSteps.SetGitCommitBuildId() {
     step(ScriptBuildStep {
         name = "Set build id as shortened git commit hash"
-        scriptContent = """
-        GIT_HASH=%system.build.vcs.number%
-        GIT_HASH_SHORT=\${GIT_HASH:0:7}
-        echo \"##teamcity[buildNumber '\${GIT_HASH_SHORT}']\"
-        """.trimIndent()
+        scriptContent = """ git_hash=%system.build.vcs.number% && echo ${git_hash} """
+        // GIT_HASH=%system.build.vcs.number%
+        // GIT_HASH_SHORT=£{GIT_HASH:0:7}
+        // echo \"##teamcity[buildNumber '£{GIT_HASH_SHORT}']\"
+        // """.replace('£', '$').trimIndent()
+        //
     })
 }
 
