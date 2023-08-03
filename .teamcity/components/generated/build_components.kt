@@ -46,12 +46,14 @@ fun BuildSteps.ConfigureGoEnv() {
 fun BuildSteps.SetGitCommitBuildId() {
     step(ScriptBuildStep {
         name = "Set build id as shortened git commit hash"
-        scriptContent = """ git_hash=%system.build.vcs.number% && echo ${git_hash} """
-        // GIT_HASH=%system.build.vcs.number%
-        // GIT_HASH_SHORT=£{GIT_HASH:0:7}
-        // echo \"##teamcity[buildNumber '£{GIT_HASH_SHORT}']\"
-        // """.replace('£', '$').trimIndent()
-        //
+        scriptContent = """
+        GIT_HASH=%system.build.vcs.number%
+        GIT_HASH_SHORT=£{GIT_HASH:0:7}
+        echo \"##teamcity[buildNumber '£{GIT_HASH_SHORT}']\"
+        """.replace('£', '$').trimIndent()
+        // Replace approach above is a way to navigate Kotlin string issue,
+        // whose mitigations cause problems in TeamCity, see:
+        // https://youtrack.jetbrains.com/issue/KT-2425/Provide-a-way-for-escaping-the-dollar-sign-symbol-in-multiline-strings-and-string-templates
     })
 }
 
