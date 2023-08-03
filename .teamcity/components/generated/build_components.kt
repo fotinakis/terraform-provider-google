@@ -49,7 +49,7 @@ fun BuildSteps.SetGitCommitBuildId() {
         scriptContent = """
             GIT_HASH=%system.build.vcs.number%
             GIT_HASH_SHORT=${'$'}{GIT_HASH:0:7}
-            echo \"##teamcity[buildNumber '${'$'}{GIT_HASH_SHORT}']\"
+            echo "##teamcity[buildNumber '${'$'}{GIT_HASH_SHORT}']"
         """.trimIndent()
         // ${'$'} is required to allow creating a script in TeamCity that contains
         // parts like ${GIT_HASH_SHORT} without having Kotlin syntax issues. For more info see:
